@@ -11,6 +11,15 @@ app.use(express.json());
 app.use("/api", require("./routes/api-routes"));
 
 app.listen(PORT, () => {
-  console.log("API key ===>", process.env.SECRET);
+  if (process.env.SECRET === undefined) {
+    throw new Error(
+      `You must create a .env file with 'SECRET' as a key, and an api key from newsapi.org as the value
+
+        Example: /.env
+        SECRET=<your key here>
+        `
+    );
+  }
+
   console.log(`listening at http://localhost:${PORT}`);
 });
