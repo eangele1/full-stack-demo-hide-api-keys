@@ -13,10 +13,10 @@ app.use("/api", require("./routes/api-routes"));
 app.listen(PORT, () => {
   if (process.env.SECRET === undefined) {
     throw new Error(
-      `You must create a .env file with 'SECRET' as a key, and an api key from newsapi.org as the value
+      `You must create a .env file with 'NEWS_SECRET' as a key, and an api key from newsapi.org as the value
 
         Example: /.env
-        SECRET=<your key here>
+        NEWS_SECRET=<your key here>
         `
     );
   }
