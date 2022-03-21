@@ -1,5 +1,5 @@
 const router = require("express").Router(); //manage routes
-const axios = require("axios");
+const axios = require("axios"); //loads the axios library for API
 require("dotenv").config(); //makes the env file work
 
 const newsUrl = `https://newsapi.org/v2/everything?apiKey=${process.env.NEWS_SECRET}&q=`;
