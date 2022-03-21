@@ -12,6 +12,7 @@ export default function App() {
           "http://localhost:5050/api?q=Pandas"
         );
         setArticles(newsResponse.data);
+        console.log(newsResponse.data[0]);
       } catch (err) {
         console.log(err);
       }
@@ -19,10 +20,12 @@ export default function App() {
   }, []);
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <Text>{articles[0]?.source.id}</Text>
+      {/* <Text>{articles ? articles : ""}</Text> */}
 
-      {/* <Text>{articles[0] ? articles[0].source.id : "Loading"}</Text> */}
+      <Text>Title: {articles[0]?.title}</Text>
+      <Text>Description: {articles[0]?.description}</Text>
+      <Text>URL: {articles[0]?.url} </Text>
+
       <StatusBar style="auto" />
     </View>
   );
