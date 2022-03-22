@@ -1,41 +1,30 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import Landing from "./components/Landing";
+import Results from "./components/Results";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [articles, setArticles] = useState([]);
-  useEffect(() => {
-    (async () => {
-      try {
-        const newsResponse = await axios.get(
-          "http://localhost:5050/api?q=Pandas"
-        );
-        setArticles(newsResponse.data);
-        console.log(newsResponse.data[0]);
-      } catch (err) {
-        console.log(err);
-      }
-    })();
-  }, []);
   return (
-    <View style={styles.container}>
-      {/* <Text>{articles ? articles : ""}</Text> */}
-
-      <Text>Title: {articles[0]?.title}</Text>
-      <Text>Description: {articles[0]?.description}</Text>
-      <Text>URL: {articles[0]?.url} </Text>
-
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Landing">
+        <Stack.Screen
+          name="Landing"
+          options={{ headerShown: false }}
+          component={Landing}
+        />
+        <Stack.Screen
+          name="Results"
+          options={{
+            title: "",
+            headerTintColor: "white",
+            headerStyle: { backgroundColor: "#B43304" },
+          }}
+          component={Results}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
