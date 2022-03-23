@@ -21,5 +21,15 @@ app.listen(PORT, () => {
     );
   }
 
+  if (process.env.WEATHER_SECRET === undefined) {
+    throw new Error(
+      `You must create a .env file with 'WEATHER_SECRET' as a key, and an api key from openweathermap.org as the value
+
+        Example: /.env
+        WEATHER_SECRET=<your key here>
+        `
+    );
+  }
+
   console.log(`listening at http://localhost:${PORT}`);
 });
