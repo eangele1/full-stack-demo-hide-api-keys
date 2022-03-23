@@ -59,7 +59,7 @@ const Results = (props) => {
         />
       )}
       {!isLoading && (
-        <View>
+        <View style={{ flex: 1 }}>
           <FlatList
             data={articles}
             renderItem={NewsCard}
