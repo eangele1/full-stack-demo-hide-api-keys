@@ -1,7 +1,16 @@
-import { View, FlatList, Platform, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  FlatList,
+  Platform,
+  StyleSheet,
+  TextInput,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { DotIndicator } from "react-native-indicators";
+import { Entypo } from "@expo/vector-icons";
 
 //DEV ONLY: for differentiating between web and mobile API requests
 import { IP_ADDR } from "@env";
@@ -13,8 +22,11 @@ const Results = (props) => {
   const [articles, setArticles] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [textInput, setTextInput] = useState(input);
+  const [navDisplay, setNavDisplay] = useState("flex");
 
-  const getData = async (input) => {
+  const [currPage, setCurrPage] = useState(1);
+
+  const getData = async (input, pageNum = 1) => {
     setLoading(true);
     try {
       const address =
@@ -22,9 +34,10 @@ const Results = (props) => {
           ? IP_ADDR
           : "localhost";
       const newsResponse = await axios.get(
-        `http://${address}:5050/api/news?q=${input}`
+        `http://${address}:5050/api/news?q=${input}&page=${pageNum}`
       );
       setArticles(newsResponse.data.articles);
+      setCurrPage(pageNum);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -46,8 +59,11 @@ const Results = (props) => {
         }}
         placeholder="Search"
         value={textInput}
+        onFocus={() => setNavDisplay("none")}
         onChangeText={setTextInput}
-        onSubmitEditing={() => textInput !== "" && getData(textInput)}
+        onSubmitEditing={() =>
+          textInput !== "" && getData(textInput) && setNavDisplay("flex")
+        }
       ></TextInput>
 
       {isLoading && (
@@ -59,13 +75,38 @@ const Results = (props) => {
         />
       )}
       {!isLoading && (
-        <View style={{ flex: 1 }}>
-          <FlatList
-            data={articles}
-            renderItem={NewsCard}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
+        <>
+          <View style={{ flex: 1 }}>
+            <FlatList
+              data={articles}
+              renderItem={NewsCard}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              height: 75,
+              alignItems: "center",
+              display: navDisplay,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => currPage !== 1 && getData(textInput, currPage - 1)}
+            >
+              <Entypo name="arrow-with-circle-left" size={40} color="black" />
+            </TouchableOpacity>
+            <Text>Page {currPage} of 10</Text>
+            <TouchableOpacity
+              onPress={() =>
+                currPage !== 10 && getData(textInput, currPage + 1)
+              }
+            >
+              <Entypo name="arrow-with-circle-right" size={40} color="black" />
+            </TouchableOpacity>
+          </View>
+        </>
       )}
     </View>
   );
